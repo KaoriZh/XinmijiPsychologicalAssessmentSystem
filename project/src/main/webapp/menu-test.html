@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="static/layui-v2.5.6/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">心秘籍</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item">
+                <h1>标题</h1>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <span>管理员</span>
+                    <span>贤心</span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">我的心理报告</a></dd>
+                    <dd><a href="">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <span style="opacity: 0.3; position: fixed;">
+    <img style="width:100%; " src="static/pic/鹿乃晴天女子.png">
+    </span>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a href="">主页</a>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">心理测评</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">心理测评大全</a></dd>
+                        <dd><a href="">新建心理测评</a></dd>
+                        <dd><a href="">查看我的心理报告</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">心理科普</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">专栏大全</a></dd>
+                        <dd><a href="">添加专栏</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">系统管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">用户管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="padding: 15px;">
+        <div id="switch-pages"></div>
+    </div>
+
+    <div class="layui-footer">
+        第14组 心秘籍
+    </div>
+</div>
+<script src="static/jquery-3.4.1/dist/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="static/layui-v2.5.6/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['element', 'form', 'laypage'], function(){
+        layui.laypage.render({
+            elem: 'switch-pages',
+            curr: 3,
+            count: 50,
+            jump: function (obj) {
+                console.log(obj.curr*obj.limit - obj.limit);
+            }
+        });
+    });
+</script>
+</body>
+</html>

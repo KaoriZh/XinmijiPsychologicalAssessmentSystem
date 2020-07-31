@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.dao.UserDao">
+
+    <select id="getUserByUid" resultType="org.example.entity.User" parameterType="long">
+        SELECT uid, name, psw, is_admin FROM users WHERE uid = #{uid}
+    </select>
+
+    <select id="getUserByNameAndPsw" resultType="org.example.entity.User">
+        SELECT uid, name, psw, is_admin FROM users WHERE name = #{name} AND psw = #{psw}
+    </select>
+
+    <insert id="createUser">
+        INSERT INTO users (name, psw) VALUES (#{name}, #{psw})
+    </insert>
+
+    <select id="getAllUsers" resultType="User">
+        SELECT uid, `name`, psw, is_admin FROM users
+    </select>
+
+    <update id="setUserPriority">
+        UPDATE users SET is_admin = #{is_admin} WHERE uid = #{uid}
+    </update>
+
+</mapper>

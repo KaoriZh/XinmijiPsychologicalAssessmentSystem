@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.dao.ArticleDao">
+
+    <select id="getAllArticles" resultType="org.example.entity.Article">
+        SELECT nid, title, LEFT(text, 20) AS text FROM articles
+    </select>
+
+    <select id="getArticle" resultType="org.example.entity.Article" parameterType="long">
+        SELECT nid, title, text FROM articles WHERE nid = #{nid}
+    </select>
+
+    <delete id="delArticle" parameterType="long">
+        DELETE FROM articles WHERE nid = #{nid}
+    </delete>
+
+    <insert id="newArticle">
+        INSERT INTO articles (title, text) VALUES (#{title}, #{text})
+    </insert>
+
+</mapper>

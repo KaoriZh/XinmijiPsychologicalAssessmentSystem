@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.dao.QuestionnaireDao">
+
+    <select id="getAllQuestionnaires" resultType="org.example.entity.Questionnaire">
+        SELECT questionnaires.`qnid`, title, abstract AS abs, COUNT(questions.`qnid`) AS qcnt, def_conclusion
+        FROM questionnaires LEFT JOIN questions
+        ON `questionnaires`.`qnid` = `questions`.`qnid`
+        GROUP BY questions.`qnid`
+    </select>
+
+    <insert id="createQuestionnaire" parameterType="org.example.entity.Questionnaire" keyProperty="qnid" useGeneratedKeys="true">
+        INSERT INTO questionnaires (title, abstract, def_conclusion) VALUES (#{title}, #{abs}, #{def_conclusion})
+    </insert>
+
+    <delete id="destroyQuestionnaire" parameterType="long">
+        DELETE FROM questionnaires WHERE qnid = #{qnid}
+    </delete>
+
+    <insert id="createQuestion">
+        INSERT INTO questions (qnid, `text`, `power`) VALUES (#{qnid}, #{text}, #{power})
+    </insert>
+
+    <insert id="createConclusion">
+        INSERT INTO conclusions (qnid, `min`, `max`, text) VALUES (#{qnid}, #{min}, #{max}, #{text})
+    </insert>
+
+    <select id="getQuestionnaireInfo" resultType="org.example.entity.Questionnaire" parameterType="long">
+        SELECT questionnaires.`qnid`, title, abstract as `abs`, COUNT(qid) AS qcnt, def_conclusion
+        FROM questionnaires LEFT JOIN questions
+        ON questionnaires.`qnid` = questions.`qnid`
+        WHERE questionnaires.`qnid` = #{qnid}
+    </select>
+
+    <select id="getAllQuestions" resultType="org.example.entity.Question" parameterType="long">
+        SELECT qid, `text`, `power` FROM questions WHERE qnid = #{qnid}
+    </select>
+
+    <insert id="postAnswers">
+        INSERT INTO answers (qid, uid, score) VALUES (#{qid}, #{uid}, #{score})
+    </insert>
+
+    <delete id="deleteAnswer">
+        DELETE answers FROM answers LEFT JOIN questions ON answers.`qid` = questions.`qid` WHERE uid = #{uid} AND qnid = #{qnid}
+    </delete>
+
+    <select id="getAllAnswers" resultType="org.example.entity.Answer">
+        SELECT answers.`qid`, `text`, score, power FROM answers LEFT JOIN questions ON answers.`qid` = questions.`qid` WHERE uid = #{uid} AND qnid = #{qnid}
+    </select>
+
+    <select id="getTotalScore" resultType="long">
+        SELECT COALESCE(SUM(`power` * score), -1) AS total_score
+        FROM questions LEFT JOIN answers
+        ON questions.`qid` = answers.`qid`
+        WHERE uid = #{uid} AND qnid = #{qnid}
+    </select>
+
+    <select id="getConclusion" resultType="String" >
+        SELECT `text` FROM conclusions WHERE qnid = #{qnid} AND `min` &lt;= #{score} AND #{score} &lt;= `max`
+    </select>
+
+    <select id="getAllValidQuestionnaire" resultType="org.example.entity.Questionnaire">
+        SELECT qnid, title, abstract as abs, 0 as qcnt, def_conclusion FROM questionnaires WHERE qnid IN (
+            SELECT qnid FROM answers LEFT JOIN questions
+            ON answers.`qid` = questions.`qid`
+            WHERE uid = #{uid} GROUP BY qnid
+        )
+    </select>
+
+</mapper>
